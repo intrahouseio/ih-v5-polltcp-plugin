@@ -1,0 +1,6 @@
+{
+    "id":"polltcp",
+    "description":"Basic TCP клиент",
+    "cross":true,
+	"version":"5.5.1"
+}
