@@ -11,8 +11,11 @@ if (!port) {
   process.exit();
 }
 
+let total = 5; 
+let sent = 0;
 const server = net.createServer(c => {
   console.log('client connected');
+  sent = 0;
   c.on('end', () => {
     console.log('client disconnected');
   });
@@ -23,8 +26,14 @@ const server = net.createServer(c => {
     const buf = Buffer.allocUnsafe(4);
     buf.writeFloatLE();
     */
+   if (total && sent < total) {
+     sent ++;
     const buf =  testResp(data.toString());
     c.write(buf);
+    console.log('Sent ' + buf.toString());
+   } else {
+    console.log('Test timeout. Total= ' + total);
+   }
   });
 });
 
