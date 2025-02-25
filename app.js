@@ -8,7 +8,7 @@ const client = require('./client');
 module.exports = async function(plugin) {
   const channels = plugin.channels.data;
   const pooldelay = plugin.params.data.pooldelay || 1000; // таймер поллинга в мсек
-  const timeout = plugin.params.data.timeout || 5000; // таймер поллинга в мсек
+  const timeout = plugin.params.data.timeout || 5000; // в мсек
 
   client.init(plugin);
   await client.connect();
@@ -23,31 +23,6 @@ module.exports = async function(plugin) {
     read(channels[currentIdx]);
     setTimeout(sendNext, pooldelay);
   }
-
-  /*
-  async function sendNext() {
-    if (waiting) {
-      if (Date.now() - waiting > timeout) {
-        // Переходить к следующему каналу или завершить с ошибкой таймаута
-        // - зависит от оборудования
-        // Если канал один - смысла нет
-        client.close();
-        this.plugin.exit(100, 'Timeout expired.  Exit');
-      } else {
-        setTimeout(sendNext, 100); // min interval?
-      }
-      return;
-    }
-
-    currentIdx += 1;
-    if (currentIdx >= channels.length) currentIdx = 0;
-
-    waiting = Date.now();
-    read(channels[currentIdx]);
-    waiting = 0;
-    setTimeout(sendNext, pooldelay);
-  }
-  */
 
   /*  read
    *   Отправляет команду чтения на контроллер, ожидает результат
@@ -84,7 +59,6 @@ function read(channelItem) {
         }
       })
       .catch (e => {
-        // plugin.log('Promise rejected '+util.inspect(e))
         // Ошибка чтения или таймаута
         client.close();
         plugin.exit(100, util.inspect(e));
